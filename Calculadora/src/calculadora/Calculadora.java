@@ -82,7 +82,7 @@ class Contenedor extends JPanel {
 
     public Contenedor (){
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); //Cambiamos la disposicion del panel
 
         //Inicializamos los objetos de tipo JButton
         btnAceptar = new JButton ("Aceptar");
@@ -91,6 +91,7 @@ class Contenedor extends JPanel {
 
         initComponent();
 
+        //Añadimos el resto de paneles a este panel principal (Contenedor "Esta clase") y pasamos referencias de los objetos para agregarlos en cada panel correspodiente
         add (new ContenedorCombo (combo), BorderLayout.NORTH);
         add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio), BorderLayout.CENTER);
         add (new ContenedorBotones(btnAceptar, btnCalcular, btnVariacion), BorderLayout.SOUTH);
@@ -98,28 +99,44 @@ class Contenedor extends JPanel {
         indexCombo = combo.getSelectedIndex(); // Para obtener el index selecionado
         totalIndex = combo.getItemCount(); //Obtener el total de items en el combo
 
+        //Inicializamos los objetos / variables declaradas.
         datos = new Datos[7];
-        promedio = 0;
 
-        //-------------------
+        //Hacemos que los botones interactuen cuando lo presionan:
+        //--------------------------------------------------------------------------
         btnAceptar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 
+                //Verifico si los campos de texto esten rellenos
                 if (!txtTemp.getText().isBlank() && !txtPres.getText().isBlank() && !txtHumedad.getText().isBlank()){
                     advertencia.setText("");
                     advertencia.setVisible(false);
                    
-                    if (indexCombo < totalIndex && indexCombo != 6){
+                    if (indexCombo < totalIndex){
+
                         datos [indexCombo] = new Datos(Integer.parseInt(txtTemp.getText()), Integer.parseInt(txtPres.getText()), Integer.parseInt(txtHumedad.getText()));
-                        indexCombo++;
+                        indexCombo++;    
                         combo.setSelectedIndex(indexCombo);
+                       
+                        //vaciarCampos();
+
                     }
 
-                    if (indexCombo == 6){
+                    if (indexCombo == 7){
+
+                        //Habilitamos y desahabilitamos los botones correspondientes
                         btnCalcular.setEnabled(true);
                         btnVariacion.setEnabled(true);
+                        btnAceptar.setEnabled(false);
+
+                        //Desahabilitamos que puedan editar los campos de textos
+                        txtTemp.setEditable(false);
+                        txtPres.setEditable(false);
+                        txtHumedad.setEditable(false);
+
+
                     }
 
 
@@ -138,27 +155,59 @@ class Contenedor extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                promedio = 0;
-                int aux = 0;
+                promedioTemp = 0;
+                promedioPres = 0;
+                promedioHum = 0;
+                int auxTemperatura = 0, auxPresion = 0, auxHumedad = 0;
 
                 for (int i = 0; i < datos.length; i++){
                     
                     if (datos [i] != null){
-                        aux += datos [i].getTemperatura();
+
+                        auxTemperatura += datos [i].getTemperatura();
+                        auxPresion += datos [i].getPresion();
+                        auxHumedad += datos [i].getHumedad();
+
                     }
 
                 }
                 
-                if (aux > 0){
+                
 
-                    promedio = aux / datos.length;
-                    lblPromedio.setText("El promedio de temperatura en la semana fue de: " + promedio);
+                promedioTemp = auxTemperatura / datos.length;
+                promedioPres = auxPresion / datos.length;
+                promedioHum = auxHumedad / datos.length;
 
-                }
+                String texto = "<html>El promedio de temperatura en la semana fue de: " + promedioTemp + 
+                                "<p>El promedio de la humedad en la semana fue de: " + promedioPres + 
+                                "<p>El promedio de la presion en la semana fue de: " + promedioHum;
+                lblPromedio.setText(texto);
                 
             }   
              
         });
+
+        btnVariacion.addActionListener (new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+
+
+            }
+            
+        });
+
+        //---------------------------------------------------------------------------------
+
+    }
+
+    //Metodo para eliminar los datos ya ingresados en los campos
+    private void vaciarCampos (){
+
+        txtTemp.setText("");
+        txtPres.setText("");
+        txtHumedad.setText("");
 
     }
 
@@ -167,19 +216,19 @@ class Contenedor extends JPanel {
 
 
         lblTemp = new JLabel("Temperatura (°C): ");
-        lblTemp.setBounds (0, 50, 200, 20);
+        lblTemp.setBounds (10, 50, 200, 20);
 
         txtTemp = new JTextField("");
         txtTemp.setBounds (120, 50, 300, 20);
 
         lblPres = new JLabel("Presion (hPa): ");
-        lblPres.setBounds (0, 100, 200, 20);
+        lblPres.setBounds (10, 100, 200, 20);
 
         txtPres = new JTextField("");
         txtPres.setBounds (120, 100, 300, 20);
 
         lblHumedad = new JLabel("Humedad (%): ");
-        lblHumedad.setBounds (0, 150, 200, 20);
+        lblHumedad.setBounds (10, 150, 200, 20);
 
         txtHumedad = new JTextField("");
         txtHumedad.setBounds (120, 150, 300, 20);
@@ -191,12 +240,12 @@ class Contenedor extends JPanel {
         advertencia.setBounds (75,210,500,40);
         advertencia.setVisible(false);
 
-        String days [] = {"1", "2", "3", "4", "5", "6", "7"};
+        String days [] = {"1", "2", "3", "4", "5", "6", "7", "..."};
         combo = new JComboBox(days);
 
 
         lblPromedio = new JLabel("");
-        lblPromedio.setBounds(0, 250, 350, 20);;
+        lblPromedio.setBounds(10, 230, 350, 80);;
 
     }
 
@@ -205,7 +254,7 @@ class Contenedor extends JPanel {
     private JComboBox combo;
     private JButton btnAceptar, btnCalcular, btnVariacion;
     private int indexCombo, totalIndex;
-    private double promedio;
+    private double promedioTemp, promedioPres, promedioHum;
     private Datos [] datos;
 
 }
