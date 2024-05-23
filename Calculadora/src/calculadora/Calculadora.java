@@ -34,7 +34,7 @@ class Marco extends JFrame {
 
 class Datos {
 
-    private double temperatura;
+    private int temperatura;
     private int humedad, presion;
 
 
@@ -49,11 +49,11 @@ class Datos {
     }
 
 
-    public double getTemperatura() {
+    public int getTemperatura() {
         return temperatura;
     }
 
-    public void setTemperatura(double temperatura) {
+    public void setTemperatura(int temperatura) {
         this.temperatura = temperatura;
     }
 
@@ -92,12 +92,14 @@ class Contenedor extends JPanel {
         initComponent();
 
         add (new ContenedorCombo (combo), BorderLayout.NORTH);
-        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia), BorderLayout.CENTER);
+        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio), BorderLayout.CENTER);
         add (new ContenedorBotones(btnAceptar, btnCalcular, btnVariacion), BorderLayout.SOUTH);
 
         indexCombo = combo.getSelectedIndex(); // Para obtener el index selecionado
         totalIndex = combo.getItemCount(); //Obtener el total de items en el combo
+
         datos = new Datos[7];
+        promedio = 0;
 
         //-------------------
         btnAceptar.addActionListener(new ActionListener() {
@@ -109,15 +111,17 @@ class Contenedor extends JPanel {
                     advertencia.setText("");
                     advertencia.setVisible(false);
                    
-                    if (indexCombo < totalIndex){
+                    if (indexCombo < totalIndex && indexCombo != 6){
                         datos [indexCombo] = new Datos(Integer.parseInt(txtTemp.getText()), Integer.parseInt(txtPres.getText()), Integer.parseInt(txtHumedad.getText()));
-                        combo.setSelectedIndex(indexCombo);
                         indexCombo++;
+                        combo.setSelectedIndex(indexCombo);
                     }
 
-                    if (indexCombo == 7){
+                    if (indexCombo == 6){
                         btnCalcular.setEnabled(true);
+                        btnVariacion.setEnabled(true);
                     }
+
 
                 } else {
                     advertencia.setText("Warning!! Debe llenar todos los Campos de Texto");
@@ -127,6 +131,33 @@ class Contenedor extends JPanel {
             }
             
 
+        });
+
+        btnCalcular.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                promedio = 0;
+                int aux = 0;
+
+                for (int i = 0; i < datos.length; i++){
+                    
+                    if (datos [i] != null){
+                        aux += datos [i].getTemperatura();
+                    }
+
+                }
+                
+                if (aux > 0){
+
+                    promedio = aux / datos.length;
+                    lblPromedio.setText("El promedio de temperatura en la semana fue de: " + promedio);
+
+                }
+                
+            }   
+             
         });
 
     }
@@ -163,14 +194,20 @@ class Contenedor extends JPanel {
         String days [] = {"1", "2", "3", "4", "5", "6", "7"};
         combo = new JComboBox(days);
 
+
+        lblPromedio = new JLabel("");
+        lblPromedio.setBounds(0, 250, 350, 20);;
+
     }
 
-    private JLabel lblTemp, lblPres, lblHumedad, advertencia;
+    private JLabel lblTemp, lblPres, lblHumedad, advertencia, lblPromedio;
     private JTextField txtTemp, txtPres, txtHumedad;
     private JComboBox combo;
     private JButton btnAceptar, btnCalcular, btnVariacion;
     private int indexCombo, totalIndex;
+    private double promedio;
     private Datos [] datos;
+
 }
 
 
@@ -192,11 +229,11 @@ class ContenedorCombo extends JPanel {
 
 class ContenedorTextos extends JPanel {
 
-    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia){
+    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia, JLabel lblPromedio){
 
         setLayout (null);
 
-        
+        add (lblPromedio);
         add (advertencia);
         add (lblTemp);
         add (txtTemp);
