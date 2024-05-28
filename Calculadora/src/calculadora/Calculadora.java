@@ -19,10 +19,7 @@ class Marco extends JFrame {
 
     public Marco (){
 
-        Toolkit tool = Toolkit.getDefaultToolkit();
-        Dimension miPantalla = tool.getScreenSize();
-
-        this.setSize (miPantalla.width / 2, miPantalla.height /2);
+        this.setSize (900, 500);
         this.setLocationRelativeTo(null);
         this.setTitle ("Calculadora");
 
@@ -93,7 +90,7 @@ class Contenedor extends JPanel {
 
         //Añadimos el resto de paneles a este panel principal (Contenedor "Esta clase") y pasamos referencias de los objetos para agregarlos en cada panel correspodiente
         add (new ContenedorCombo (combo), BorderLayout.NORTH);
-        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio), BorderLayout.CENTER);
+        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio, lblVariacion, comboVariacion), BorderLayout.CENTER);
         add (new ContenedorBotones(btnAceptar, btnCalcular, btnVariacion), BorderLayout.SOUTH);
 
         indexCombo = combo.getSelectedIndex(); // Para obtener el index selecionado
@@ -192,7 +189,19 @@ class Contenedor extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
+                int v1 = datos [0].getTemperatura();
+                int v2 = datos [6].getTemperatura();
 
+                int variacion = v1 - v2;
+
+                //Evaluamos la resta, en caso sea negativa lo multiplicamos por menos uno para que de positivo
+                if (variacion < 0){
+                    variacion = variacion * - 1;
+                    lblVariacion.setText("<html>Variacion de temperatura entre el Dia 1 & 7: " + variacion);
+
+                } else {
+                    lblVariacion.setText("<html>Variacion de temperatura entre el Dia 1 & 7: " + variacion);        
+                }
 
             }
             
@@ -243,15 +252,22 @@ class Contenedor extends JPanel {
         String days [] = {"1", "2", "3", "4", "5", "6", "7", "..."};
         combo = new JComboBox(days);
 
+        
+        String nums [] = {"1", "2", "3", "4", "5", "6", "7"};
+        comboVariacion = new JComboBox(nums);
+
 
         lblPromedio = new JLabel("");
         lblPromedio.setBounds(10, 230, 350, 80);;
 
+        lblVariacion = new JLabel("");
+        lblVariacion.setBounds(300, 230, 350, 80);;
+
     }
 
-    private JLabel lblTemp, lblPres, lblHumedad, advertencia, lblPromedio;
+    private JLabel lblTemp, lblPres, lblHumedad, advertencia, lblPromedio, lblVariacion;
     private JTextField txtTemp, txtPres, txtHumedad;
-    private JComboBox combo;
+    private JComboBox combo, comboVariacion;
     private JButton btnAceptar, btnCalcular, btnVariacion;
     private int indexCombo, totalIndex;
     private double promedioTemp, promedioPres, promedioHum;
@@ -265,7 +281,7 @@ class ContenedorCombo extends JPanel {
     public ContenedorCombo (JComboBox combo){
 
         setLayout(new GridLayout(1, 2));
-        text = new JLabel("Dias de la semana: ");
+        text = new JLabel("   Dias de la semana: ");
 
         add (text);
         add (combo);
@@ -278,10 +294,11 @@ class ContenedorCombo extends JPanel {
 
 class ContenedorTextos extends JPanel {
 
-    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia, JLabel lblPromedio){
+    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia, JLabel lblPromedio, JLabel lblVariacion, JComboBox comboVariacion){
 
         setLayout (null);
 
+        add (lblVariacion);
         add (lblPromedio);
         add (advertencia);
         add (lblTemp);
@@ -290,6 +307,7 @@ class ContenedorTextos extends JPanel {
         add (txtPres);
         add (lblHumedad);
         add (txtHumedad);
+        
 
     }
 
