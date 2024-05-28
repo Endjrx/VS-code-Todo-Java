@@ -90,7 +90,7 @@ class Contenedor extends JPanel {
 
         //Añadimos el resto de paneles a este panel principal (Contenedor "Esta clase") y pasamos referencias de los objetos para agregarlos en cada panel correspodiente
         add (new ContenedorCombo (combo), BorderLayout.NORTH);
-        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio, lblVariacion, comboVariacion), BorderLayout.CENTER);
+        add (new ContenedorTextos(lblTemp, txtTemp, lblPres, txtPres, lblHumedad, txtHumedad, advertencia, lblPromedio, lblVariacion, comboVariacion,lblCombo, comboVariacion2), BorderLayout.CENTER);
         add (new ContenedorBotones(btnAceptar, btnCalcular, btnVariacion), BorderLayout.SOUTH);
 
         indexCombo = combo.getSelectedIndex(); // Para obtener el index selecionado
@@ -253,8 +253,15 @@ class Contenedor extends JPanel {
         combo = new JComboBox(days);
 
         
+        lblCombo = new JLabel("Variacion de dias: ");
+        lblCombo.setBounds(600, 50, 150, 20);
+
         String nums [] = {"1", "2", "3", "4", "5", "6", "7"};
         comboVariacion = new JComboBox(nums);
+        comboVariacion.setBounds(750, 51, 50, 20);
+
+        comboVariacion2 = new JComboBox(nums);
+        comboVariacion2.setBounds(810, 51, 50, 20);
 
 
         lblPromedio = new JLabel("");
@@ -265,9 +272,9 @@ class Contenedor extends JPanel {
 
     }
 
-    private JLabel lblTemp, lblPres, lblHumedad, advertencia, lblPromedio, lblVariacion;
+    private JLabel lblTemp, lblPres, lblHumedad, advertencia, lblPromedio, lblVariacion, lblCombo;
     private JTextField txtTemp, txtPres, txtHumedad;
-    private JComboBox combo, comboVariacion;
+    private JComboBox combo, comboVariacion, comboVariacion2;
     private JButton btnAceptar, btnCalcular, btnVariacion;
     private int indexCombo, totalIndex;
     private double promedioTemp, promedioPres, promedioHum;
@@ -294,11 +301,13 @@ class ContenedorCombo extends JPanel {
 
 class ContenedorTextos extends JPanel {
 
-    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia, JLabel lblPromedio, JLabel lblVariacion, JComboBox comboVariacion){
+    public ContenedorTextos (JLabel lblTemp, JTextField txtTemp, JLabel lblPres, JTextField txtPres, JLabel lblHumedad, JTextField txtHumedad, JLabel advertencia, JLabel lblPromedio, JLabel lblVariacion, JComboBox comboVariacion, JLabel lblCombo, JComboBox comboVariacion2){
 
         setLayout (null);
 
         add (lblVariacion);
+        add (comboVariacion);
+        add (comboVariacion2);
         add (lblPromedio);
         add (advertencia);
         add (lblTemp);
@@ -307,6 +316,7 @@ class ContenedorTextos extends JPanel {
         add (txtPres);
         add (lblHumedad);
         add (txtHumedad);
+        add (lblCombo);
         
 
     }
