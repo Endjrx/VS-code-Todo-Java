@@ -1,21 +1,24 @@
 package gui;
 
 import javax.swing.*;
+
+import datos_user.Clientes;
+import datos_user.Plantilla;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.*;
 
 public class ContenedorLogin extends JPanel {
-    
-    public ContenedorLogin (){
+
+    public ContenedorLogin (JPanel contenedor, ArrayList <Plantilla> lista){
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
         initComponents();
-
+        this.contenedor = contenedor;
+        this.lista = lista;
     }
 
     //-----------------------METODO PARA CREAR TODOS LOS COMPONENTES-----------------------
@@ -36,16 +39,51 @@ public class ContenedorLogin extends JPanel {
         txtPassword = new JPasswordField("---.contraseña.---");
 
         construirCampos(panel, txtEmail, 100, 240, 300, 20);
-        txtEmail.addMouseListener(new MouseAdapter() {
-            
+        txtEmail.addFocusListener(new FocusListener() {
+
             @Override
-            public void mousePressed (MouseEvent e) {
+            public void focusGained(FocusEvent e) {
 
                 if (txtEmail.getText().equals("Ingrese su email")) {
                     txtEmail.setText("");
                     txtEmail.setForeground(Color.BLACK);
                 }
 
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+               
+                if (txtEmail.getText().isBlank()) {
+                    txtEmail.setText("Ingrese su email");
+                    txtEmail.setForeground(Color.GRAY);
+                }
+
+            }
+            
+        });
+
+        construirCampos(panel, txtPassword, 100, 340, 300, 20);
+        txtPassword.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                
+                String contraseña = "";
+                for (int i = 0; i < txtPassword.getPassword().length; i++) {
+                    contraseña += txtPassword.getPassword() [i];
+                }
+
+                if (contraseña.equals("---.contraseña.---")) {
+                    txtPassword.setText("");
+                    txtPassword.setForeground(Color.BLACK);
+                }  
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                
                 String contraseña = "";
                 for (int i = 0; i < txtPassword.getPassword().length; i++) {
                     contraseña += txtPassword.getPassword() [i];
@@ -57,62 +95,26 @@ public class ContenedorLogin extends JPanel {
                 }
 
             }
-
-        });
-
-        construirCampos(panel, txtPassword, 100, 340, 300, 20);
-        txtPassword.addMouseListener(new MouseAdapter() {
             
-            @Override
-            public void mousePressed (MouseEvent e) {
-
-                String contraseña = "";
-                for (int i = 0; i < txtPassword.getPassword().length; i++) {
-                    contraseña += txtPassword.getPassword() [i];
-                }
-
-                if (contraseña.equals("---.contraseña.---")) {
-                    txtPassword.setText("");
-                    txtPassword.setForeground(Color.BLACK);
-                }
-
-                if (txtEmail.getText().isBlank()) {
-                    txtEmail.setText("Ingrese su email");
-                    txtEmail.setForeground(Color.GRAY);
-                }
-
-            }
-
         });
-        //------------------------------------METODO QUE CONSTRUYE LOS BOTONES Y LE CONFIGURA SUS ATRIBUTOS--------------------------------------
-        panel.add (construirBoton(new JButton ("INCIAR SESION"), "Aceptar", 170, 440, 400, 35, new Color (0, 134, 190), Color.WHITE));
 
+
+        //------------------------------------METODO QUE CONSTRUYE LOS BOTONES Y LE CONFIGURA SUS ATRIBUTOS--------------------------------------
+        panel.add (construirBoton(new JButton ("INCIAR SESION"), "Iniciar", 170, 440, 400, 35, new Color (0, 134, 190), Color.WHITE));
         add(panel);
     }
 
+    //------------------------------METODO QUE SE ENCARGA DE CONSTRUIR JLABELS--------------------------------------------
     private JLabel construirLabels (JLabel label, int x, int y, int width, int height, Font fuente){
 
         label.setBounds(x, y, width, height);
         label.setFont(fuente);
 
-        label.addMouseListener(new MouseAdapter() {
-            
-            @Override
-            public void mouseClicked (MouseEvent e){
-                
-                if (label.getText().equals("Register")) {
-                    
-
-
-                }
-
-            }
-
-        });
-
         return label;
     }
 
+
+    //--------------------------------METODO QUE SE ENCARGA DE CONSTRURIR LOS FIELDS ---------------------------------  
     private void construirCampos (JPanel panel, JComponent componente, int x, int y, int width, int height){
 
         componente.setOpaque(false);
@@ -127,6 +129,8 @@ public class ContenedorLogin extends JPanel {
         
     }
 
+
+    //----------------------------------------METODO QUE CONSTRUYE TODOS LOS JBUTTONS------------------------------------  
     private JButton construirBoton (JButton boton, String texto, int x, int y, int width, int height, Color color, Color font) {
 
         boton.setBounds(x, y, width, height);
@@ -142,7 +146,29 @@ public class ContenedorLogin extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                if (e.getActionCommand().equals("Aceptar")) {
+                if (e.getActionCommand().equals("Iniciar")) {
+
+                    for (int i = 0; i < lista.size(); i++) {
+
+                        if (txtEmail.getText().equals(lista.get(i).getEmail())) {
+
+                            for (int j = 0; j < lista.size(); j++) {
+                                if (txtPassword.getPassword() [j] != lista.get(i).getContraseña() [j]) {
+                                    JOptionPane.showMessageDialog(ContenedorLogin.this, "Contraseña y/o email incorrecto");
+                                    return;
+                                }    
+                            }
+                            
+                            contenedor.removeAll();
+                            contenedor.add(new ContenedorMovimientos(lista, contenedor, i));
+                            contenedor.repaint();
+                            contenedor.revalidate ();
+
+                            return;
+                        }
+                    } 
+
+                    JOptionPane.showMessageDialog(ContenedorLogin.this, "Email y/o contraseña Incorrecta");
 
                 }
 
@@ -153,6 +179,8 @@ public class ContenedorLogin extends JPanel {
         return boton;
     }
 
+    private JPanel contenedor;
     private JTextField txtEmail;
     private JPasswordField txtPassword;
+    private ArrayList <Plantilla> lista = new ArrayList<Plantilla>();
 }

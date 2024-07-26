@@ -2,24 +2,25 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import datos_user.*;
+import java.util.ArrayList;
 
 public class ContenedorPrincipal extends JPanel {
 
-    public ContenedorPrincipal () {
+    public ContenedorPrincipal (ArrayList <Plantilla> lista) {
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
         //----------------------CREAMOS JPANELES PARA CADA BOTON----------------------------------------
-        JPanel panelBack = new JPanel();
-        panelBack.setBackground(Color.WHITE);
-        panelBack.setLayout(new FlowLayout(FlowLayout.LEFT, 5,0));
+        JPanel panelRegresar = new JPanel();
+        panelRegresar.setBackground(Color.WHITE);
+        panelRegresar.setLayout(new FlowLayout(FlowLayout.LEFT, 5,0));
 
-        JPanel panelBoton = new JPanel();
-        panelBoton.setBackground(Color.WHITE);
-        panelBoton.setLayout(new FlowLayout(FlowLayout.RIGHT, 5,0));
+        JPanel panelRegistrar = new JPanel();
+        panelRegistrar.setBackground(Color.WHITE);
+        panelRegistrar.setLayout(new FlowLayout(FlowLayout.RIGHT, 5,0));
 
 
         //-----------------------CREAMOS LOS BOTONES PARA CADA LIMINA CON SUS CONFIGURACIONBES------------------------------------
@@ -33,41 +34,38 @@ public class ContenedorPrincipal extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 removeAll();
-                add(new ContenedorRegistros(), BorderLayout.CENTER);
+                add(new ContenedorRegistros(lista), BorderLayout.CENTER);
                 repaint();
-                add(panelBack, BorderLayout.NORTH);
+                add(panelRegresar, BorderLayout.NORTH);
                 revalidate();
 
             }
             
         });
-        panelBoton.add(btnRegistrar);
+        panelRegistrar.add(btnRegistrar);
 
-
-    //-------------------------------CREAMOS UN JPANEL Y UN BOTON PARA GUARDAR EL BOTON EN EL JPANEL Y AGREGAR ESE PANEL EN LA ZONA NORTE-------------------------
-
-        JButton btnBack = new JButton("Regresar");
-        btnBack.setContentAreaFilled(false);
-        btnBack.setFocusPainted(false);
-        btnBack.setBorder(null);
-        btnBack.addActionListener(new ActionListener() {
+        JButton btnRegresar = new JButton("Regresar");
+        btnRegresar.setContentAreaFilled(false);
+        btnRegresar.setFocusPainted(false);
+        btnRegresar.setBorder(null);
+        btnRegresar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 
                 removeAll();
-                add(new ContenedorLogin(), BorderLayout.CENTER);
+                add(new ContenedorLogin(ContenedorPrincipal.this, lista), BorderLayout.CENTER);
                 repaint();
-                add (panelBoton, BorderLayout.NORTH);
+                add (panelRegistrar, BorderLayout.NORTH);
                 revalidate ();
 
             }
             
         });
-        panelBack.add(btnBack);
+        panelRegresar.add(btnRegresar);
 
-        add(new ContenedorLogin(), BorderLayout.CENTER);
-        add(panelBoton, BorderLayout.NORTH);
+        add(new ContenedorLogin(this, lista), BorderLayout.CENTER);
+        add(panelRegistrar, BorderLayout.NORTH);
     }
 
 }

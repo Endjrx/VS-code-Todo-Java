@@ -1,21 +1,22 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-
+import datos_user.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class ContenedorRegistros extends JPanel {
     
-    public ContenedorRegistros () {
+    ArrayList <Plantilla> lista = new ArrayList<Plantilla>();
+
+    public ContenedorRegistros (ArrayList <Plantilla> lista) {
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         initComponents();
+
+        this.lista = lista;
 
     }
 
@@ -108,6 +109,26 @@ public class ContenedorRegistros extends JPanel {
             boton.setFocusPainted(false);
             boton.setBackground(back);
             boton.setOpaque(true);
+            boton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    boolean v1 = false, v2 = false, v3 = false, v4 = false;
+
+                    v1 = (!txtEmail.getText().equals("Ingrese su email") || !txtEmail.getText().isBlank()) ? true : false;
+                    v2 = (!txtID.getText().equals("Ingrese su numero de identificacion") || !txtID.getText().isBlank()) ? true : false;
+                    v3 = (!txtUsuario.getText().equals("Ingrese su nombre de usuario") || !txtUsuario.getText().isBlank()) ? true : false;
+                    v4 = (txtPassword.getPassword().length != 0) ? true : false;
+
+                    if (v1 && v2 && v3 && v4) {
+                        lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0));
+                        JOptionPane.showMessageDialog(ContenedorRegistros.this, "Registro Exitoso", "Informe", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                }   
+                
+            });
 
         }
 
@@ -120,7 +141,7 @@ public class ContenedorRegistros extends JPanel {
                 public void mousePressed (MouseEvent e){
                     if (field.getText().equals("Ingrese su nombre de usuario")) {
                         
-                        field.setBackground(Color.BLACK);
+                        field.setForeground(Color.BLACK);
                         field.setText("");
 
                         if (txtEmail.getText().isBlank()) {

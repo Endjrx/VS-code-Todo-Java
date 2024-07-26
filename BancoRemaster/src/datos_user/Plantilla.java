@@ -1,11 +1,11 @@
 package datos_user;
 
-public abstract class Usuario {
+public abstract class Plantilla {
     
-    public Usuario () {
+    public Plantilla () {
     }
 
-    public Usuario(String nombre, String email, String contraseña, String id, int edad) {
+    public Plantilla(String nombre, String email, char [] contraseña, String id, int edad) {
         
         this.nombre = nombre;
         this.email = email;
@@ -31,10 +31,11 @@ public abstract class Usuario {
         return this.edad;
     }
 
-    public String getContraseña () {
+    public char [] getContraseña () {
         return contraseña;
     }
 
-    private String nombre, email, id, contraseña;
+    private String nombre, email, id;
+    private char [] contraseña;
     private int edad;
 }

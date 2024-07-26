@@ -1,11 +1,11 @@
 package datos_user;
 
-public class Personal extends Usuario {
+public class Personal extends Plantilla {
     
     public Personal () {
     }
 
-    public Personal (String nombre, String email, String contraseña, String id, int edad) {
+    public Personal (String nombre, String email, char [] contraseña, String id, int edad) {
         super(nombre, email, contraseña, id, edad);
     }
     
