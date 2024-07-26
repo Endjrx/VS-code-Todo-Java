@@ -1,7 +1,5 @@
 package main_app;
 
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import gui.*;
 

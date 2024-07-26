@@ -34,9 +34,9 @@ public class ContenedorPrincipal extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 removeAll();
-                add(new ContenedorRegistros(lista), BorderLayout.CENTER);
-                repaint();
+                add(new ContenedorRegistros(ContenedorPrincipal.this, lista, panelRegistrar), BorderLayout.CENTER);
                 add(panelRegresar, BorderLayout.NORTH);
+                repaint();
                 revalidate();
 
             }
@@ -66,6 +66,7 @@ public class ContenedorPrincipal extends JPanel {
 
         add(new ContenedorLogin(this, lista), BorderLayout.CENTER);
         add(panelRegistrar, BorderLayout.NORTH);
+
     }
 
 }

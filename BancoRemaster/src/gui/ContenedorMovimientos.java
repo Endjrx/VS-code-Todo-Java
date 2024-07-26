@@ -10,6 +10,8 @@ import lista_registro.ListaHistorial;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class ContenedorMovimientos extends JPanel {
@@ -34,6 +36,7 @@ public class ContenedorMovimientos extends JPanel {
         
         this.contenedor = contenedor;
         this.lista = lista;
+        this.posicion = posicion;
         
         setModel();
         setDatosModelo(posicion);
@@ -96,7 +99,7 @@ public class ContenedorMovimientos extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 contenedor.removeAll();
-                contenedor.add(new ContenedorLogin(contenedor, lista));
+                contenedor.add(new ContenedorLogin(contenedor, lista), BorderLayout.CENTER);
                 contenedor.repaint();
                 contenedor.revalidate ();
 
@@ -114,7 +117,19 @@ public class ContenedorMovimientos extends JPanel {
         panelAccount.setLayout(new FlowLayout(FlowLayout.RIGHT, 10,4));
 
         JLabel imgAccount = new JLabel (new ImageIcon("src//img//Account.png"));
-        imgAccount.addMouseListener(null);
+        imgAccount.addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mouseClicked (MouseEvent e) {
+
+                contenedor.removeAll();
+                contenedor.add(new Account(contenedor, lista, posicion));
+                contenedor.repaint();
+                contenedor.revalidate ();
+
+            }
+
+        });
         panelAccount.add(imgAccount);
 
         panelPadreNorte.add(panelAccount);        
@@ -158,6 +173,24 @@ public class ContenedorMovimientos extends JPanel {
         boton.setActionCommand(command);
         boton.setBounds(x, y, 170, 35);
         boton.setFont(new Font("Roboto Black", Font.BOLD, 14));
+        boton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                if (e.getActionCommand().equals("Prestamo")) {
+                    System.out.println(e.getActionCommand());
+                } else if (e.getActionCommand().equals("Retirar")) {
+                    System.out.println(e.getActionCommand());
+                } else if (e.getActionCommand().equals("Consignar")) {
+                    System.out.println(e.getActionCommand());
+                } else {
+                    System.out.println(e.getActionCommand());
+                }
+
+            }
+            
+        });
         panel.add(boton);
 
         if (separator != null){
@@ -184,4 +217,5 @@ public class ContenedorMovimientos extends JPanel {
     private JScrollPane paneScroll;
     private JPanel contenedor;
     private ArrayList <Plantilla> lista = new ArrayList<Plantilla>();
+    private int posicion;
 }

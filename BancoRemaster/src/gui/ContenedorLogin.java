@@ -1,10 +1,7 @@
 package gui;
 
 import javax.swing.*;
-
-import datos_user.Clientes;
 import datos_user.Plantilla;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -19,6 +16,7 @@ public class ContenedorLogin extends JPanel {
         initComponents();
         this.contenedor = contenedor;
         this.lista = lista;
+
     }
 
     //-----------------------METODO PARA CREAR TODOS LOS COMPONENTES-----------------------

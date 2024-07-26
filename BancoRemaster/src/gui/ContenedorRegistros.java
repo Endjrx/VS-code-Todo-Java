@@ -10,14 +10,15 @@ public class ContenedorRegistros extends JPanel {
     
     ArrayList <Plantilla> lista = new ArrayList<Plantilla>();
 
-    public ContenedorRegistros (ArrayList <Plantilla> lista) {
+    public ContenedorRegistros (JPanel contenedor, ArrayList <Plantilla> lista, JPanel panelRegistrar) {
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         initComponents();
 
         this.lista = lista;
-
+        this.contenedor = contenedor;
+        this.panelRegistrar = panelRegistrar;
     }
 
     private void initComponents () {
@@ -37,19 +38,19 @@ public class ContenedorRegistros extends JPanel {
         //-------------------------------------------------------AGREGAMOS LOS COMPONENTES A LA INTERFAZ----------------------------------------------------------------
         construirComponentes(panel, new JLabel("REGISTROS"), null, 410, 20, 200, 30, new Font("Roboto Black", Font.BOLD, 32), Color.BLACK, null, null);
         construirComponentes(panel, new JLabel("USUARIO"), null, 70, 100, 120, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
-        construirComponentes(panel, txtUsuario, new JSeparator(), 70, 130, 300, 20, new Font("Verdana", Font.PLAIN, 10), Color.GRAY, null, null);
+        construirComponentes(panel, txtUsuario, new JSeparator(), 70, 130, 300, 20, new Font("Arial", Font.PLAIN, 12), Color.GRAY, null, null);
         
         construirComponentes(panel, new JLabel("ID"), null, 70, 170, 120, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
-        construirComponentes(panel, txtID, new JSeparator(), 70, 200, 300, 20, new Font("Verdana", Font.PLAIN, 10), Color.GRAY, null, null);
+        construirComponentes(panel, txtID, new JSeparator(), 70, 200, 300, 20, new Font("Arial", Font.PLAIN, 12), Color.GRAY, null, null);
         
         construirComponentes(panel, new JLabel("EMAIL"), null, 70, 250, 120, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
-        construirComponentes(panel, txtEmail, new JSeparator(), 70, 280, 300, 20, new Font("Verdana", Font.PLAIN, 10), Color.GRAY, null, null);
+        construirComponentes(panel, txtEmail, new JSeparator(), 70, 280, 300, 20, new Font("Arial", Font.PLAIN, 12), Color.GRAY, null, null);
 
         construirComponentes(panel, new JLabel("SEXO"), null, 70, 320, 200, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
-        construirComponentes(panel, combo, null, 70, 350, 300, 25, new Font("Verdana", Font.PLAIN, 10), Color.BLACK, null, null);
+        construirComponentes(panel, combo, null, 70, 350, 300, 25, new Font("Arial", Font.PLAIN, 12), Color.BLACK, null, null);
 
         construirComponentes(panel, new JLabel("CONTRASEÑA"), null, 70, 400, 200, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
-        construirComponentes(panel, txtPassword, new JSeparator(), 70, 430, 300, 20, new Font("Verdana", Font.PLAIN, 10), Color.GRAY, null, null);
+        construirComponentes(panel, txtPassword, new JSeparator(), 70, 430, 300, 20, new Font("Arial", Font.PLAIN, 12), Color.GRAY, null, null);
         txtPassword.addMouseListener(new MouseAdapter() {
             
             @Override
@@ -86,6 +87,7 @@ public class ContenedorRegistros extends JPanel {
 
         });
 
+        
         //-------------------------------------------------------AGREGAMOS LOS BOTONES------------------------------------------------------------------------
         construirComponentes(panel, new JButton("REGISTRAR"), null, 100, 480, 400, 35, new Font("Roboto Black", Font.PLAIN, 14), Color.WHITE, new Color (0, 134, 190), "Registrar R");
         add(panel, BorderLayout.CENTER);
@@ -122,8 +124,16 @@ public class ContenedorRegistros extends JPanel {
                     v4 = (txtPassword.getPassword().length != 0) ? true : false;
 
                     if (v1 && v2 && v3 && v4) {
+
                         lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0));
                         JOptionPane.showMessageDialog(ContenedorRegistros.this, "Registro Exitoso", "Informe", JOptionPane.INFORMATION_MESSAGE);
+                        
+                        contenedor.removeAll();
+                        contenedor.add(new ContenedorLogin(contenedor, lista), BorderLayout.CENTER);
+                        contenedor.add (panelRegistrar, BorderLayout.NORTH);
+                        contenedor.repaint();
+                        contenedor.revalidate ();
+
                     }
 
                 }   
@@ -243,4 +253,5 @@ public class ContenedorRegistros extends JPanel {
     private JTextField txtUsuario, txtID, txtEmail;
     private JComboBox <String> combo;
     private JPasswordField txtPassword;
+    private JPanel contenedor, panelRegistrar;
 }
