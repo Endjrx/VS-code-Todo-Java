@@ -10,7 +10,7 @@ public class ContenedorRegistros extends JPanel {
     
     ArrayList <Plantilla> lista = new ArrayList<Plantilla>();
 
-    public ContenedorRegistros (JPanel contenedor, ArrayList <Plantilla> lista, JPanel panelRegistrar) {
+    public ContenedorRegistros (JPanel contenedor, ArrayList <Plantilla> lista) {
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
@@ -18,7 +18,6 @@ public class ContenedorRegistros extends JPanel {
 
         this.lista = lista;
         this.contenedor = contenedor;
-        this.panelRegistrar = panelRegistrar;
     }
 
     private void initComponents () {
@@ -89,6 +88,7 @@ public class ContenedorRegistros extends JPanel {
 
         
         //-------------------------------------------------------AGREGAMOS LOS BOTONES------------------------------------------------------------------------
+        construirComponentes(panel, new JButton("Login"), null, 900, 0, 80, 35, new Font("Roboto Black", Font.PLAIN, 14), Color.BLACK, new Color (0, 134, 190), "Login");
         construirComponentes(panel, new JButton("REGISTRAR"), null, 100, 480, 400, 35, new Font("Roboto Black", Font.PLAIN, 14), Color.WHITE, new Color (0, 134, 190), "Registrar R");
         add(panel, BorderLayout.CENTER);
 
@@ -111,26 +111,43 @@ public class ContenedorRegistros extends JPanel {
             boton.setFocusPainted(false);
             boton.setBackground(back);
             boton.setOpaque(true);
+
+            if (boton.getActionCommand().equals("Login")) {
+                boton.setContentAreaFilled(false);
+            }
+
             boton.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    boolean v1 = false, v2 = false, v3 = false, v4 = false;
+                    if (e.getActionCommand().equals("Registrar R")) {
 
-                    v1 = (!txtEmail.getText().equals("Ingrese su email") || !txtEmail.getText().isBlank()) ? true : false;
-                    v2 = (!txtID.getText().equals("Ingrese su numero de identificacion") || !txtID.getText().isBlank()) ? true : false;
-                    v3 = (!txtUsuario.getText().equals("Ingrese su nombre de usuario") || !txtUsuario.getText().isBlank()) ? true : false;
-                    v4 = (txtPassword.getPassword().length != 0) ? true : false;
+                        boolean v1 = false, v2 = false, v3 = false, v4 = false;
 
-                    if (v1 && v2 && v3 && v4) {
+                        v1 = (!txtEmail.getText().equals("Ingrese su email") || !txtEmail.getText().isBlank()) ? true : false;
+                        v2 = (!txtID.getText().equals("Ingrese su numero de identificacion") || !txtID.getText().isBlank()) ? true : false;
+                        v3 = (!txtUsuario.getText().equals("Ingrese su nombre de usuario") || !txtUsuario.getText().isBlank()) ? true : false;
+                        v4 = (txtPassword.getPassword().length != 0) ? true : false;
 
-                        lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0));
-                        JOptionPane.showMessageDialog(ContenedorRegistros.this, "Registro Exitoso", "Informe", JOptionPane.INFORMATION_MESSAGE);
-                        
+                        if (v1 && v2 && v3 && v4) {
+
+                            lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0));
+                            JOptionPane.showMessageDialog(ContenedorRegistros.this, "Registro Exitoso", "Informe", JOptionPane.INFORMATION_MESSAGE);
+                            
+                            contenedor.removeAll();
+                            contenedor.add(new ContenedorLogin(contenedor, lista), BorderLayout.CENTER);
+                            contenedor.repaint();
+                            contenedor.revalidate ();
+
+                        }
+
+                    }
+
+                    if (e.getActionCommand().equals("Login")) {
+
                         contenedor.removeAll();
-                        contenedor.add(new ContenedorLogin(contenedor, lista), BorderLayout.CENTER);
-                        contenedor.add (panelRegistrar, BorderLayout.NORTH);
+                        contenedor.add(new ContenedorLogin(contenedor, lista));
                         contenedor.repaint();
                         contenedor.revalidate ();
 
@@ -253,5 +270,5 @@ public class ContenedorRegistros extends JPanel {
     private JTextField txtUsuario, txtID, txtEmail;
     private JComboBox <String> combo;
     private JPasswordField txtPassword;
-    private JPanel contenedor, panelRegistrar;
+    private JPanel contenedor;
 }

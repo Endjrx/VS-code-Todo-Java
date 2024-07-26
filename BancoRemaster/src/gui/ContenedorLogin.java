@@ -97,7 +97,20 @@ public class ContenedorLogin extends JPanel {
         });
 
 
+        JButton botonRegistrar = new JButton ("Registrar");
+        botonRegistrar.setFocusPainted(false);
+        botonRegistrar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+            
+        });
+        
+
         //------------------------------------METODO QUE CONSTRUYE LOS BOTONES Y LE CONFIGURA SUS ATRIBUTOS--------------------------------------
+        panel.add (construirBoton(new JButton ("Register"), "Registrar", 900, 0, 80, 35, Color.WHITE, Color.BLACK));
         panel.add (construirBoton(new JButton ("INCIAR SESION"), "Iniciar", 170, 440, 400, 35, new Color (0, 134, 190), Color.WHITE));
         add(panel);
     }
@@ -139,6 +152,15 @@ public class ContenedorLogin extends JPanel {
         boton.setForeground(font);
         boton.setFont(new Font ("Roboto Black", Font.BOLD, 14));
 
+        if (texto.equals("Register")) {
+
+            boton.setOpaque(true);
+            boton.setContentAreaFilled(false);
+            boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            
+
+        }
+
         boton.addActionListener(new ActionListener() {
 
             @Override
@@ -167,6 +189,16 @@ public class ContenedorLogin extends JPanel {
                     } 
 
                     JOptionPane.showMessageDialog(ContenedorLogin.this, "Email y/o contraseña Incorrecta");
+
+                }
+
+
+                if (e.getActionCommand().equals("Registrar")) {
+
+                    contenedor.removeAll();
+                    contenedor.add(new ContenedorRegistros(contenedor, lista));
+                    contenedor.repaint();
+                    contenedor.revalidate ();
 
                 }
 

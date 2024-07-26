@@ -47,9 +47,9 @@ public class Account extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 contenedor.removeAll();
-                contenedor.add(new ContenedorMovimientos(lista, panel, posicion));
+                contenedor.add(new ContenedorMovimientos(lista, contenedor, posicion));
                 contenedor.repaint();
                 contenedor.revalidate ();
 
