@@ -110,7 +110,7 @@ public class ContenedorLogin extends JPanel {
         
 
         //------------------------------------METODO QUE CONSTRUYE LOS BOTONES Y LE CONFIGURA SUS ATRIBUTOS--------------------------------------
-        panel.add (construirBoton(new JButton ("Register"), "Registrar", 900, 0, 80, 35, Color.WHITE, Color.BLACK));
+        panel.add (construirBoton(new JButton ("Register"), "Register", 900, 0, 80, 35, null, Color.BLACK));
         panel.add (construirBoton(new JButton ("INCIAR SESION"), "Iniciar", 170, 440, 400, 35, new Color (0, 134, 190), Color.WHITE));
         add(panel);
     }
@@ -154,10 +154,8 @@ public class ContenedorLogin extends JPanel {
 
         if (texto.equals("Register")) {
 
-            boton.setOpaque(true);
             boton.setContentAreaFilled(false);
             boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            
 
         }
 
@@ -193,7 +191,7 @@ public class ContenedorLogin extends JPanel {
                 }
 
 
-                if (e.getActionCommand().equals("Registrar")) {
+                if (e.getActionCommand().equals("Register")) {
 
                     contenedor.removeAll();
                     contenedor.add(new ContenedorRegistros(contenedor, lista));

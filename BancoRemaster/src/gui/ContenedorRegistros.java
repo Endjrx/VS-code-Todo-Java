@@ -50,41 +50,6 @@ public class ContenedorRegistros extends JPanel {
 
         construirComponentes(panel, new JLabel("CONTRASEÑA"), null, 70, 400, 200, 30, new Font("Roboto Black", Font.BOLD, 20), Color.BLACK, null, null);
         construirComponentes(panel, txtPassword, new JSeparator(), 70, 430, 300, 20, new Font("Arial", Font.PLAIN, 12), Color.GRAY, null, null);
-        txtPassword.addMouseListener(new MouseAdapter() {
-            
-            @Override
-            public void mousePressed (MouseEvent e){
-
-                String contraseña = "";
-                for (int i = 0; i < txtPassword.getPassword().length; i++) {
-                    contraseña += txtPassword.getPassword() [i];
-                }
-
-                if (contraseña.equals("---.Contraseña.---")) {
-                    
-                    txtPassword.setText("");
-                    txtPassword.setForeground (Color.BLACK);
-
-                    if (txtUsuario.getText().isBlank()) {
-                        txtUsuario.setText("Ingrese su nombre de usuario");
-                        txtUsuario.setForeground(Color.GRAY);
-                    }
-
-                    if (txtEmail.getText().isBlank()) {
-                        txtEmail.setText("Ingrese su email");
-                        txtEmail.setForeground(Color.GRAY);
-                    }
-
-                    if (txtID.getText().isBlank()) {
-                        txtID.setText("Ingrese su numero de identificacion");
-                        txtID.setForeground(Color.GRAY);
-                    }
-
-                }
-
-            }
-
-        });
 
         
         //-------------------------------------------------------AGREGAMOS LOS BOTONES------------------------------------------------------------------------
@@ -162,98 +127,101 @@ public class ContenedorRegistros extends JPanel {
         if (comp instanceof JTextField) {
 
             JTextField field = (JTextField) comp;
-            field.addMouseListener(new MouseAdapter() {
-                
+            field.addFocusListener(new FocusListener() {
+
                 @Override
-                public void mousePressed (MouseEvent e){
-                    if (field.getText().equals("Ingrese su nombre de usuario")) {
+                public void focusGained(FocusEvent e) {
+                    
+                    if (e.getSource() == txtUsuario) {
                         
-                        field.setForeground(Color.BLACK);
-                        field.setText("");
-
-                        if (txtEmail.getText().isBlank()) {
-                            txtEmail.setText("Ingrese su email");
-                            txtEmail.setForeground(Color.GRAY);
-                        }
-
-                        if (txtPassword.getPassword().length == 0) {
-                            txtPassword.setText("---.Contraseña.---");
-                            txtPassword.setForeground(Color.GRAY);
-                        }
-
-                        if (txtID.getText().isBlank()) {
-                            txtID.setText("Ingrese su numero de identificacion");
-                            txtID.setForeground(Color.GRAY);
-                        }
+                        if (txtUsuario.getText().equals("Ingrese su nombre de usuario")) {
                         
-                    } else if (txtUsuario.getText().isBlank()){
+                            txtUsuario.setForeground(Color.BLACK);
+                            txtUsuario.setText("");
+                        }    
 
-                        txtUsuario.setText("Ingrese su nombre de usuario");
-                        txtUsuario.setForeground(Color.GRAY);
+                    } else if (e.getSource() == txtID) {
 
-                    }
-
-
-                    //-------------------------------------------------------------------
-                    if (field.getText().equals("Ingrese su numero de identificacion")) {
+                        if (txtID.getText().equals("Ingrese su numero de identificacion")) {
                         
-                        field.setForeground(Color.BLACK);
-                        field.setText("");
+                            txtID.setForeground(Color.BLACK);
+                            txtID.setText("");
 
-                        if (txtUsuario.getText().isBlank()) {
-                            txtUsuario.setText("Ingrese su nombre de usuario");
-                            txtUsuario.setForeground(Color.GRAY);
-                        }
+                        }    
 
-                        if (txtEmail.getText().isBlank()) {
-                            txtEmail.setText("Ingrese su email");
-                            txtEmail.setForeground(Color.GRAY);
-                        }
+                    } else if (e.getSource() == txtEmail) {
 
-                        if (txtPassword.getPassword().length == 0) {
-                            txtPassword.setText("---.Contraseña.---");
-                            txtPassword.setForeground(Color.GRAY);
-                        }
-
-                    } else if (txtID.getText().isBlank()) {
-
-                        txtID.setText("Ingrese su numero de identificacion");
-                        txtID.setForeground(Color.GRAY);
-
-                    }
-
-                    //------------------------------EVALUAMOS SI EL TXTEMAIL ESTA CON EL TEXTO DEFAULT-----------------------------
-                    if (field.getText().equals("Ingrese su email")) {
+                        if (txtEmail.getText().equals("Ingrese su email")) {
                         
-                        txtEmail.setText("");
-                        txtEmail.setForeground(Color.BLACK);
+                            txtEmail.setText("");
+                            txtEmail.setForeground(Color.BLACK);
 
-                        if (txtUsuario.getText().isBlank()) {
-                            txtUsuario.setText("Ingrese su nombre de usuario");
-                            txtUsuario.setForeground(Color.GRAY);
                         }
 
-                        if (txtPassword.getPassword().length == 0) {
-                            txtPassword.setText("---.Contraseña.---");
-                            txtPassword.setForeground(Color.GRAY);
+                    } else if (e.getSource() == txtPassword) {
+
+                        String contraseña = "";
+                        for (int i = 0; i < txtPassword.getPassword().length; i++) {
+                            contraseña += txtPassword.getPassword() [i];
                         }
 
-                        if (txtID.getText().isBlank()) {
-                            txtID.setText("Ingrese su numero de identificacion");
-                            txtID.setForeground(Color.GRAY);
+                        if (contraseña.equals("---.Contraseña.---")) {
+                            
+                            txtPassword.setText("");
+                            txtPassword.setForeground (Color.BLACK);
                         }
-
-                    } else if (txtEmail.getText().isBlank()) {
-
-                        txtEmail.setText("Ingrese su email");
-                        txtEmail.setForeground(Color.GRAY);
-
+                            
                     }
 
                 }
-                
 
+                @Override
+                public void focusLost(FocusEvent e) {
+                    
+                    if (e.getSource() == txtUsuario) {
+
+                        if (txtUsuario.getText().isBlank()) {
+                         
+                            txtUsuario.setText("Ingrese su nombre de usuario");
+                            txtUsuario.setForeground(Color.GRAY);
+
+                        }
+
+
+                    } else if (e.getSource() == txtEmail) {
+
+                        if (txtEmail.getText().isBlank()) {
+
+                            txtEmail.setText("Ingrese su email");
+                            txtEmail.setForeground(Color.GRAY);
+                            
+                        }
+
+                    } else if (e.getSource() == txtID) {
+
+                        if (txtID.getText().isBlank()) {
+
+                            txtID.setText("Ingrese su numero de identificacion");
+                            txtID.setForeground(Color.GRAY);
+
+                        }
+
+                    } else if (e.getSource() == txtPassword){
+
+                        if (txtPassword.getPassword().length == 0) {
+
+                            txtPassword.setText("---.Contraseña.---");
+                            txtPassword.setForeground(Color.GRAY);
+
+                        }
+
+                    }
+
+
+                }
+                
             });
+            
 
         }
 

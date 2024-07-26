@@ -39,7 +39,7 @@ public class Account extends JPanel {
         panelRegresar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 2));
         panelRegresar.setBackground(getBackground());
 
-        JButton boton = new JButton("Regresar");
+        JButton boton = new JButton("Movimientos");
         boton.setFocusPainted(false);
         boton.setContentAreaFilled(false);
         boton.setBorder (null);
