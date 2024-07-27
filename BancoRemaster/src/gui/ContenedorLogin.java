@@ -72,7 +72,7 @@ public class ContenedorLogin extends JPanel {
                     contraseña += txtPassword.getPassword() [i];
                 }
 
-                if (contraseña.equals("---.contraseña.---")) {
+                if (contraseña.equals("---.Contraseña.---")) {
                     txtPassword.setText("");
                     txtPassword.setForeground(Color.BLACK);
                 }  
