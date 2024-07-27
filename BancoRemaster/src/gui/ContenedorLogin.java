@@ -88,7 +88,7 @@ public class ContenedorLogin extends JPanel {
                 }
 
                 if (contraseña.isBlank()) {
-                    txtPassword.setText("---.contraseña.---");
+                    txtPassword.setText("---.Contraseña.---");
                     txtPassword.setForeground(Color.GRAY);
                 }
 
