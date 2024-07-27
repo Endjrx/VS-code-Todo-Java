@@ -17,14 +17,7 @@ import java.util.ArrayList;
 public class ContenedorMovimientos extends JPanel {
  
     //-----------------------------MI MODELO DEL JTABLE--------------------------
-    DefaultTableModel modelo = new DefaultTableModel(){
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        };
-
-    };
+    DefaultTableModel modelo;
     
 
     //--------------------------------------CONSTRUCTOR-----------------------------------
@@ -46,8 +39,17 @@ public class ContenedorMovimientos extends JPanel {
     //-------------------------METODOS PARA CONFIGURAR EL JTABLE---------------------------
     private void setModel () {
 
+        modelo = new DefaultTableModel(){
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            };
+    
+        };
+
         modelo.setColumnIdentifiers(new Object[] {
-            "Saldo", "Prestamo", "Deuda + Interes", "Cuotas"
+            "Saldo", "Prestamo", "Deuda + Interes", "Cuotas", "Total"
         });
         tabla.setModel(modelo);
     }
@@ -67,7 +69,8 @@ public class ContenedorMovimientos extends JPanel {
                         historial.obtenerDatos() [i].getHistorial().getSaldo(),
                         historial.obtenerDatos() [i].getHistorial().getPrestamo(),
                         historial.obtenerDatos() [i].getHistorial().getDeuda(),
-                        historial.obtenerDatos() [i].getHistorial().getCuota()
+                        historial.obtenerDatos() [i].getHistorial().getCuota(),
+                        historial.obtenerDatos() [i].getHistorial().getTotal()
 
                     });
                 }
@@ -89,10 +92,11 @@ public class ContenedorMovimientos extends JPanel {
 
 
         //-----------------------------BOTON PARA REGRESAR AL MENU DE LOGING---------------------------
-        JButton btnRegresar = new JButton ("Regresar");
+        JButton btnRegresar = new JButton ("Cerrar Sesion");
         btnRegresar.setFocusPainted(false);
         btnRegresar.setContentAreaFilled(false);
         btnRegresar.setBorder(null);
+        btnRegresar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnRegresar.addActionListener(new ActionListener() {
 
             @Override
@@ -117,6 +121,7 @@ public class ContenedorMovimientos extends JPanel {
         panelAccount.setLayout(new FlowLayout(FlowLayout.RIGHT, 10,4));
 
         JLabel imgAccount = new JLabel (new ImageIcon("src//img//Account.png"));
+        imgAccount.setCursor(new Cursor(Cursor.HAND_CURSOR));
         imgAccount.addMouseListener(new MouseAdapter() {
             
             @Override
@@ -131,6 +136,7 @@ public class ContenedorMovimientos extends JPanel {
 
         });
         panelAccount.add(imgAccount);
+
 
         panelPadreNorte.add(panelAccount);        
         add(panelPadreNorte, BorderLayout.NORTH);
@@ -148,7 +154,6 @@ public class ContenedorMovimientos extends JPanel {
         panelCentral.setBackground(Color.WHITE);
         panelCentral.add(paneScroll, BorderLayout.CENTER);
         panelCentral.add(title, BorderLayout.NORTH);
-
         add(panelCentral, BorderLayout.CENTER);
 
 
@@ -179,14 +184,116 @@ public class ContenedorMovimientos extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 if (e.getActionCommand().equals("Prestamo")) {
-                    System.out.println(e.getActionCommand());
+                   
+                    if (tabla.getRowCount() > 0) {
+                        if ((double) tabla.getValueAt(tabla.getRowCount() - 1, 4) >= 1000){
+
+                            double prestamo = (double) tabla.getValueAt(tabla.getRowCount() - 1, 4) * 0.5;
+                            double deuda = prestamo + (prestamo * 0.02);
+                            double cuotas = deuda / 6;
+                            if (lista.get(posicion) instanceof Clientes) {
+
+                                Clientes cliente = (Clientes) lista.get(posicion);
+
+                                int tamaño = cliente.getHistorial().obtenerTamaño();
+                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setPrestamo(prestamo);
+                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setDeuda(deuda);
+                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setCuota(cuotas);
+
+                                setModel();
+                                setDatosModelo(posicion);
+
+                            }
+    
+    
+                        } else {
+                            JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Tiene que tener += 1000$ para aspirar a un prestamo", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        }    
+
+                    }
+
                 } else if (e.getActionCommand().equals("Retirar")) {
-                    System.out.println(e.getActionCommand());
+                    
+                    try {
+
+                        double retirar = Double.parseDouble (field.getText());
+                        if (lista.get(posicion) instanceof Clientes) {
+                            if (retirar  > 0 ) {
+                                if (tabla.getRowCount() > 0) {
+                                    
+                                    Clientes cliente = (Clientes) lista.get(posicion);
+
+                                    if (retirar <= (double) tabla.getValueAt(tabla.getRowCount() - 1, 4)) {
+
+                                        //Obtenemos el saldo de la ultima final y lo restamo con el nuevo y agregar ese nuevo saldo al historial
+                                        double saldoVigente = (Double) tabla.getValueAt(tabla.getRowCount() -  1, 4);
+                                        double nuevoSaldo = saldoVigente - retirar;
+                                        cliente.getHistorial().agregarDatos(new Historial((retirar * - 1), 0, 0, 0, nuevoSaldo));
+
+                                        setModel();
+                                        setDatosModelo(posicion);
+
+                                    } else {
+                                        JOptionPane.showMessageDialog(ContenedorMovimientos.this, "No puede retirar más del saldo total disponible", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                                    }
+
+                                } else {
+                                    JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Saldo insuficiente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(ContenedorMovimientos.this, "No puede ingresar valores menores o igual a cero", "Warning", JOptionPane.WARNING_MESSAGE);
+                            }
+
+                        }
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Ingrese valores numericos", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }    
+
                 } else if (e.getActionCommand().equals("Consignar")) {
-                    System.out.println(e.getActionCommand());
-                } else {
-                    System.out.println(e.getActionCommand());
-                }
+                    
+                    try {
+
+                        double saldo = Double.parseDouble(field.getText());
+                        
+                        if (lista.get(posicion) instanceof Clientes) {
+                            if (saldo > 0) {
+
+                                Clientes cliente = (Clientes) lista.get(posicion);
+
+                                double ultimoSaldo = 0;
+                                double prestamo = 0;
+                                double deuda = 0;
+                                double cuotas = 0;
+
+                                int tamañoHistorial = cliente.getHistorial().obtenerTamaño();
+                                if (tamañoHistorial > 0) {
+                                    ultimoSaldo = (double) cliente.getHistorial().obtenerDatos() [tamañoHistorial - 1].getHistorial().getTotal();
+                                    prestamo = (double) cliente.getHistorial().obtenerDatos() [tamañoHistorial - 1].getHistorial().getPrestamo();
+                                    deuda = (double) cliente.getHistorial().obtenerDatos() [tamañoHistorial - 1].getHistorial().getDeuda();
+                                    cuotas = (double) cliente.getHistorial().obtenerDatos() [tamañoHistorial - 1].getHistorial().getCuota();
+                                }
+
+                                cliente.getHistorial().agregarDatos(new Historial(saldo,  prestamo, cuotas, deuda, ultimoSaldo + saldo));
+
+                                setModel();
+                                setDatosModelo(posicion);
+
+                            } else {
+                                JOptionPane.showMessageDialog(ContenedorMovimientos.this, "No puede ingresar valores menores o igual a cero", "Warning", JOptionPane.WARNING_MESSAGE);
+                            }
+                        }
+
+                    } catch (NumberFormatException exx) {
+                        JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Ingrese valores numericos", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }
+
+                } else if (e.getActionCommand().equals("Cuotas")){
+
+                    
+
+                }   
 
             }
             
