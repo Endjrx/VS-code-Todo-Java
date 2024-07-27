@@ -34,7 +34,7 @@ public class ContenedorLogin extends JPanel {
         
         //--------------------------------------INSTANCIAMOS LOS OBJETOS Y LOS POSICIONAMOS CON EL METODO----------------------------
         txtEmail = new JTextField("Ingrese su email");
-        txtPassword = new JPasswordField("---.contraseña.---");
+        txtPassword = new JPasswordField("---.Contraseña.---");
 
         construirCampos(panel, txtEmail, 100, 240, 300, 20);
         txtEmail.addFocusListener(new FocusListener() {
@@ -170,19 +170,17 @@ public class ContenedorLogin extends JPanel {
 
                         if (txtEmail.getText().equals(lista.get(i).getEmail())) {
 
-                            for (int j = 0; j < lista.size(); j++) {
-                                if (txtPassword.getPassword() [j] != lista.get(i).getContraseña() [j]) {
-                                    JOptionPane.showMessageDialog(ContenedorLogin.this, "Contraseña y/o email incorrecto");
-                                    return;
-                                }    
-                            }
-                            
-                            contenedor.removeAll();
-                            contenedor.add(new ContenedorMovimientos(lista, contenedor, i));
-                            contenedor.repaint();
-                            contenedor.revalidate ();
+                            if (Arrays.equals(txtPassword.getPassword(), lista.get(i).getContraseña())) {
 
-                            return;
+                                contenedor.removeAll();
+                                contenedor.add(new ContenedorMovimientos(lista, contenedor, i));
+                                contenedor.repaint();
+                                contenedor.revalidate ();
+
+                                return;
+
+                            }
+
                         }
                     } 
 
