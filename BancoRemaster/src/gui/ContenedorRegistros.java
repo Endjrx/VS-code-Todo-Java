@@ -5,6 +5,7 @@ import datos_user.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ContenedorRegistros extends JPanel {
     
@@ -79,6 +80,7 @@ public class ContenedorRegistros extends JPanel {
 
             if (boton.getActionCommand().equals("Login")) {
                 boton.setContentAreaFilled(false);
+                boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
             boton.addActionListener(new ActionListener() {
@@ -90,14 +92,16 @@ public class ContenedorRegistros extends JPanel {
 
                         boolean v1 = false, v2 = false, v3 = false, v4 = false;
 
-                        v1 = (!txtEmail.getText().equals("Ingrese su email") || !txtEmail.getText().isBlank()) ? true : false;
-                        v2 = (!txtID.getText().equals("Ingrese su numero de identificacion") || !txtID.getText().isBlank()) ? true : false;
-                        v3 = (!txtUsuario.getText().equals("Ingrese su nombre de usuario") || !txtUsuario.getText().isBlank()) ? true : false;
-                        v4 = (txtPassword.getPassword().length != 0) ? true : false;
+                        v1 = (!txtEmail.getText().equals("Ingrese su email") && !txtEmail.getText().isBlank()) ? true : false;
+                        v2 = (!txtID.getText().equals("Ingrese su numero de identificacion") && !txtID.getText().isBlank()) ? true : false;
+                        v3 = (!txtUsuario.getText().equals("Ingrese su nombre de usuario") && !txtUsuario.getText().isBlank()) ? true : false;
+                        v4 = (!Arrays.equals(txtPassword.getPassword(), new char [] {
+                            '-', '-', '-', '.', 'C', 'o', 'n', 't', 'r', 'a', 's', 'e', 'ñ', 'a', '.', '-', '-', '-'
+                        })) ? true : false;
 
                         if (v1 && v2 && v3 && v4) {
 
-                            lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0));
+                            lista.add(new Clientes(txtUsuario.getText(), txtEmail.getText(), txtPassword.getPassword(), txtID.getText(),0, 0, 0, 0, 0, 0));
                             JOptionPane.showMessageDialog(ContenedorRegistros.this, "Registro Exitoso", "Informe", JOptionPane.INFORMATION_MESSAGE);
                             
                             contenedor.removeAll();
@@ -105,6 +109,8 @@ public class ContenedorRegistros extends JPanel {
                             contenedor.repaint();
                             contenedor.revalidate ();
 
+                        } else {
+                            JOptionPane.showMessageDialog(ContenedorRegistros.this, "Debe llenar todos los campos", "Warning", JOptionPane.WARNING_MESSAGE);
                         }
 
                     }
@@ -170,7 +176,7 @@ public class ContenedorRegistros extends JPanel {
                             txtPassword.setText("");
                             txtPassword.setForeground (Color.BLACK);
                         }
-                            
+
                     }
 
                 }

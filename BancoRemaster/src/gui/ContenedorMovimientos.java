@@ -186,30 +186,33 @@ public class ContenedorMovimientos extends JPanel {
                 if (e.getActionCommand().equals("Prestamo")) {
                    
                     if (tabla.getRowCount() > 0) {
-                        if ((double) tabla.getValueAt(tabla.getRowCount() - 1, 4) >= 1000){
-
-                            double prestamo = (double) tabla.getValueAt(tabla.getRowCount() - 1, 4) * 0.5;
-                            double deuda = prestamo + (prestamo * 0.02);
-                            double cuotas = deuda / 6;
-                            if (lista.get(posicion) instanceof Clientes) {
-
-                                Clientes cliente = (Clientes) lista.get(posicion);
-
-                                int tamaño = cliente.getHistorial().obtenerTamaño();
-                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setPrestamo(prestamo);
-                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setDeuda(deuda);
-                                cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setCuota(cuotas);
-
-                                setModel();
-                                setDatosModelo(posicion);
-
+                        if ((double)tabla.getValueAt(tabla.getRowCount() - 1 , 1) == 0) {
+                            if ((double) tabla.getValueAt(tabla.getRowCount() - 1, 4) >= 1000){
+                            
+                                double prestamo = (double) tabla.getValueAt(tabla.getRowCount() - 1, 4) * 0.5;
+                                double deuda = prestamo + (prestamo * 0.02);
+                                double cuotas = deuda / 6;
+                                if (lista.get(posicion) instanceof Clientes) {
+    
+                                    Clientes cliente = (Clientes) lista.get(posicion);
+    
+                                    int tamaño = cliente.getHistorial().obtenerTamaño();
+                                    cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setPrestamo(prestamo);
+                                    cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setDeuda(deuda);
+                                    cliente.getHistorial().obtenerDatos() [tamaño - 1].getHistorial().setCuota(cuotas);
+    
+                                    setModel();
+                                    setDatosModelo(posicion);
+    
+                                }
+        
+        
+                            } else {
+                                JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Tiene que tener += 1000$ para aspirar a un prestamo", "Advertencia", JOptionPane.WARNING_MESSAGE);
                             }
-    
-    
                         } else {
-                            JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Tiene que tener += 1000$ para aspirar a un prestamo", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        }    
-
+                            JOptionPane.showMessageDialog(ContenedorMovimientos.this, "No puede hacer otro prestamo si ya tiene uno vigente", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        }
                     }
 
                 } else if (e.getActionCommand().equals("Retirar")) {
@@ -219,16 +222,19 @@ public class ContenedorMovimientos extends JPanel {
                         double retirar = Double.parseDouble (field.getText());
                         if (lista.get(posicion) instanceof Clientes) {
                             if (retirar  > 0 ) {
-                                if (tabla.getRowCount() > 0) {
+                                if (tabla.getRowCount() > 0) { //Al evaluar esta condicion, basicamente verifico si hay algun dato en la tabla.
                                     
                                     Clientes cliente = (Clientes) lista.get(posicion);
 
-                                    if (retirar <= (double) tabla.getValueAt(tabla.getRowCount() - 1, 4)) {
+                                    if (retirar <= (double) tabla.getValueAt(tabla.getRowCount() - 1, 4)) { //Me aseguro que ya haya saldo previo y el suficiente.
 
                                         //Obtenemos el saldo de la ultima final y lo restamo con el nuevo y agregar ese nuevo saldo al historial
                                         double saldoVigente = (Double) tabla.getValueAt(tabla.getRowCount() -  1, 4);
                                         double nuevoSaldo = saldoVigente - retirar;
-                                        cliente.getHistorial().agregarDatos(new Historial((retirar * - 1), 0, 0, 0, nuevoSaldo));
+                                        double prestamoVigente = (double) tabla.getValueAt(tabla.getRowCount() - 1, 1);
+                                        double cuotaVigente = (double) tabla.getValueAt(tabla.getRowCount() - 1, 3);
+                                        double deudaVigente = (double) tabla.getValueAt(tabla.getRowCount() - 1, 2);
+                                        cliente.getHistorial().agregarDatos(new Historial((retirar * - 1), prestamoVigente, cuotaVigente, deudaVigente, nuevoSaldo));
 
                                         setModel();
                                         setDatosModelo(posicion);
@@ -291,7 +297,43 @@ public class ContenedorMovimientos extends JPanel {
 
                 } else if (e.getActionCommand().equals("Cuotas")){
 
-                    
+                    if (lista.get(posicion) instanceof Clientes) {
+                        
+                        try {
+                            
+                            if (Double.parseDouble(field.getText()) >= (double) tabla.getValueAt(tabla.getRowCount() - 1, 3) ) { //Me aseguro que abone lo de la cuota
+
+                                double valorPagar = Double.parseDouble(field.getText());
+                                Clientes cliente = (Clientes) lista.get(posicion);
+                                Historial ultimoHistorial = cliente.getHistorial().obtenerDatos() [cliente.getHistorial().obtenerTamaño() - 1].getHistorial();
+
+                                if (((double)tabla.getValueAt(tabla.getRowCount() - 1, 2) + (valorPagar * -1)) >= 0) {
+
+                                    ultimoHistorial.setDeuda(ultimoHistorial.getDeuda() - valorPagar);
+                                    ultimoHistorial.setTotal(ultimoHistorial.getTotal() - valorPagar);
+
+                                    setModel();
+                                    setDatosModelo(posicion);
+
+                                    if ((double)tabla.getValueAt(tabla.getRowCount() - 1, 2) == 0) {
+
+                                        
+
+                                    }
+
+                                } else {
+                                    JOptionPane.showMessageDialog(ContenedorMovimientos.this, "No puede abonar más de lo que debe");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(ContenedorMovimientos.this, "Las cuotas deben ser pagadas como lo establecido", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            }
+
+                        } catch (Exception ex) {
+                            
+                        }
+
+                    }
 
                 }   
 

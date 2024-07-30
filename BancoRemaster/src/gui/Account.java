@@ -6,6 +6,8 @@ import datos_user.Plantilla;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Account extends JPanel {
@@ -31,35 +33,10 @@ public class Account extends JPanel {
         panel.setBackground(Color.WHITE);
         panel.setLayout(null);
 
+        this.posicion = posicion;
+
         construrirInterfaz(panel, posicion);
         add(panel, BorderLayout.CENTER);
-
-
-        JPanel panelRegresar = new JPanel();
-        panelRegresar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 2));
-        panelRegresar.setBackground(getBackground());
-
-        JButton boton = new JButton("Movimientos");
-        boton.setFocusPainted(false);
-        boton.setContentAreaFilled(false);
-        boton.setBorder (null);
-        boton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                contenedor.removeAll();
-                contenedor.add(new ContenedorMovimientos(lista, contenedor, posicion));
-                contenedor.repaint();
-                contenedor.revalidate ();
-
-            }
-            
-        });
-        panelRegresar.add(boton);
-
-        add(panelRegresar, BorderLayout.NORTH);
-
     }
 
 
@@ -78,8 +55,8 @@ public class Account extends JPanel {
         confiComp(panel, new JLabel ("Account"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 60, 150, 70, 35);        
         confiComp(panel, new JLabel ("Publishing"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 150, 150, 70, 35);        
         confiComp(panel, new JLabel ("Notifications"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 250, 150, 100, 35);        
-        confiComp(panel, new JLabel ("Membership and payment"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 360, 150, 150, 35);        
-        confiComp(panel, new JLabel ("Security and apps"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 550, 150, 150, 35);        
+        confiComp(panel, new JLabel ("Security and apps"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 360, 150, 150, 35);        
+        confiComp(panel, new JLabel ("Monetary transactions"), new Font("Arial", Font.PLAIN, 13), new JSeparator(), new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 500, 150, 150, 35);        
         
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         confiComp(panel, new JLabel ("Email address"), new Font("Arial", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 60, 220, 500, 25);        
@@ -92,9 +69,9 @@ public class Account extends JPanel {
         confiComp(panel, new JLabel ("Profile desing"), new Font("Arial", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 60, 370, 170, 25);        
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        confiComp(panel, new JLabel (""), null, new JSeparator(), null, Color.GRAY, 60, 420, 645, 25);        
-        confiComp(panel, new JLabel ("Deactivate account"), new Font("Courier", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), new Color (191, 0, 16), 60, 490, 400, 25);        
-        confiComp(panel, new JLabel ("Deactivating will suspend your account until you sign back in"), new Font("Arial", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 60, 515, 400, 25);
+        confiComp(panel, new JLabel (""), null, new JSeparator(), null, Color.GRAY, 60, 410, 625, 25);        
+        confiComp(panel, new JLabel ("Deactivate account"), new Font("Courier", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), new Color (191, 0, 16), 60, 470, 400, 25);        
+        confiComp(panel, new JLabel ("Deactivating will suspend your account until you sign back in"), new Font("Arial", Font.PLAIN, 13), null, new Cursor(Cursor.HAND_CURSOR), Color.GRAY, 60, 490, 400, 25);
 
     }
 
@@ -108,9 +85,27 @@ public class Account extends JPanel {
         label.setCursor(cursor);
         panel.add(label);
 
+        if (label.getText().equals("Monetary transactions")) {
+
+            label.addMouseListener(new MouseAdapter() {
+                
+                @Override
+                public void mouseClicked (MouseEvent e){
+
+                    contenedor.removeAll();
+                    contenedor.add(new ContenedorMovimientos(lista, contenedor, posicion));
+                    contenedor.repaint();
+                    contenedor.revalidate ();
+
+                }
+
+            });
+
+        }
+
         if (separador != null){
             separador.setForeground(Color.LIGHT_GRAY);
-            separador.setBounds(x, y + 30, width + 40, 10);
+            separador.setBounds(x, y + 30, width + 90, 10);
             panel.add(separador);
         }
 
@@ -118,4 +113,5 @@ public class Account extends JPanel {
 
 
     private JPanel contenedor; //Objeto que obtedrá una referencia al contenedor principal
+    private int posicion;
 }

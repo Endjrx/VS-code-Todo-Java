@@ -5,12 +5,13 @@ public class Historial {
     public Historial() {
     }
 
-    public Historial(double saldo, double prestamo, double cuota, double deuda) {
+    public Historial(double saldo, double prestamo, double cuota, double deuda, double total) {
     
         this.saldo = saldo;
         this.prestamo = prestamo;
         this.cuota = cuota;
         this.deuda = deuda;
+        this.total = total;
 
     }
 
@@ -46,6 +47,14 @@ public class Historial {
         this.deuda = deuda;
     }
 
+    public double getTotal() {
+        return this.total;
+    }
 
-    private double saldo, prestamo, cuota, deuda;
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+
+    private double saldo, prestamo, cuota, deuda, total;
 }

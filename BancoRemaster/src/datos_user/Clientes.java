@@ -1,6 +1,5 @@
 package datos_user;
 
-import lista_registro.Historial;
 import lista_registro.ListaHistorial;
 
 public class Clientes extends Plantilla {
@@ -12,13 +11,14 @@ public class Clientes extends Plantilla {
         super(nombre, email, contraseña, id, edad);
     }
 
-    public Clientes (String nombre, String email, char [] contraseña, String id, int edad, double saldo, double prestamo, double deuda, double cuotas){
+    public Clientes (String nombre, String email, char [] contraseña, String id, int edad, double saldo, double prestamo, double deuda, double cuotas, double total){
         
         super(nombre, email, contraseña, id, edad);
         this.saldo = saldo;
         this.cuotas = cuotas;
         this.prestamo = prestamo;
         this.deuda = deuda;
+        this.total = total;
 
         historial = new ListaHistorial();
     }
@@ -29,7 +29,6 @@ public class Clientes extends Plantilla {
 
     public void setSaldo(double saldo) {
         this.saldo = saldo;
-        historial.agregarDatos(new Historial(saldo,prestamo, cuotas, deuda));
     }
 
     public double getPrestamo() {
@@ -38,7 +37,6 @@ public class Clientes extends Plantilla {
 
     public void setPrestamo(double prestamo) {
         this.prestamo = prestamo;
-        historial.agregarDatos(new Historial(saldo,prestamo, cuotas, deuda));
     }
 
     public double getDeuda() {
@@ -47,7 +45,6 @@ public class Clientes extends Plantilla {
 
     public void setDeuda(double deuda) {
         this.deuda = deuda;
-        historial.agregarDatos(new Historial(saldo,prestamo, cuotas, deuda));
     }
 
     public double getCuotas() {
@@ -56,13 +53,20 @@ public class Clientes extends Plantilla {
 
     public void setCuotas(double cuotas) {
         this.cuotas = cuotas;
-        historial.agregarDatos(new Historial(saldo,prestamo, cuotas, deuda));
+    }
+
+    public double getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 
     public ListaHistorial getHistorial () {
         return historial;
     }
 
-    private double saldo, prestamo, deuda, cuotas;
+    private double saldo, prestamo, deuda, cuotas, total;
     private ListaHistorial historial;
 }
