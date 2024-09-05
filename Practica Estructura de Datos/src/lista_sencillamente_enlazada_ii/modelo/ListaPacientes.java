@@ -139,6 +139,26 @@ public class ListaPacientes {
 
         return cont;
     }
+
+
+
+    //Metodo para buscar usuario
+    public void buscarUsuario (String buscar) {
+
+        if (inicio == null) {
+            return;
+        } else {
+
+            Nodo temp = inicio;
+            while (temp != null) {
+
+                
+
+            }
+
+        }
+
+    }
     
 
     public Nodo getInicio() {

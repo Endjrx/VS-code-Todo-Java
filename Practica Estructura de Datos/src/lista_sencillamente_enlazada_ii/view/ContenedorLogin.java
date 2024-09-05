@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class ContenedorLogin extends JPanel {
 
@@ -79,8 +81,8 @@ public class ContenedorLogin extends JPanel {
         txtEmail = new JTextField("Email Address");
         txtPassword = new JPasswordField("-.:Contraseña:.-");
 
-        configurarRightContents(right_content, txtEmail, Color.GRAY, 100, 220, 330, 30, null);
-        configurarRightContents(right_content, txtPassword, Color.GRAY, 100, 290, 330, 30, null);
+        configurarRightContents(right_content, txtEmail, Color.GRAY, 100, 220, 330, 30, "txtEmail E");
+        configurarRightContents(right_content, txtPassword, Color.GRAY, 100, 290, 330, 30, "txtPassword P");
 
         /*-----------------AGREGAMOS LOS BOTONES---------------- */
         btnLogin = new JButton ("Login");
@@ -97,12 +99,98 @@ public class ContenedorLogin extends JPanel {
     //Este metodo se encarga de configurar y darle apareciencia a los componentes del contenido derecho.
     private void configurarRightContents (JPanel panel, JComponent componente, Color color, int x, int y, int width, int height, String command) {
 
-        if (componente instanceof JTextField || componente instanceof JPasswordField) {
+        if (command.equals("txtEmail E")) {
 
-            componente.setForeground(color);
-            componente.setOpaque(false);
-            componente.setBounds(x, y, width, height);
-            componente.setBorder (null);
+            JTextField comp = (JTextField) componente;
+
+            comp.setForeground(color);
+            comp.setOpaque(false);
+            comp.setBounds(x, y, width, height);
+            comp.setBorder (null);
+            
+            if (command.equals("txtEmail E")) {
+                comp.addFocusListener(new FocusListener() {
+
+                    @Override
+                    public void focusGained(FocusEvent e) {
+                        
+                        if (comp.getText().equals("Email Address")) {
+
+                            comp.setText("");
+                            comp.setForeground(Color.BLACK);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void focusLost(FocusEvent e) {
+                        
+                        if (comp.getText().isBlank()) {
+
+                            comp.setText("Email Address");
+                            comp.setForeground(Color.GRAY);
+
+                        }
+
+                    }
+                    
+                });
+
+            } 
+            
+            
+
+            JSeparator sptr = new JSeparator();
+            sptr.setBounds(x, y + 30, width, height);
+            sptr.setForeground(Color.BLACK);
+            panel.add(sptr);
+
+        } else if (componente instanceof JPasswordField) {
+
+            JPasswordField compPass = (JPasswordField) componente;
+
+            compPass.setForeground(color);
+            compPass.setOpaque(false);
+            compPass.setBounds(x, y, width, height);
+            compPass.setBorder (null);
+
+            
+            compPass.addFocusListener(new FocusListener() {
+
+                @Override
+                public void focusGained(FocusEvent e) {
+                    
+                    char contraseña [] = txtPassword.getPassword();
+                    String str_contraseña = "";
+                    for (char c : contraseña) {
+                        str_contraseña += c;
+                    }
+
+                    if (str_contraseña.equals("-.:Contraseña:.-")) {
+
+                        compPass.setText("");
+                        compPass.setForeground(Color.BLACK);
+
+                    }
+
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    
+                    if (compPass.getPassword().length == 0) {
+
+                        compPass.setText("-.:Contraseña:.-");
+                        compPass.setForeground(Color.BLACK);
+
+                    }
+
+                }
+                
+            });
+
+            
 
             JSeparator sptr = new JSeparator();
             sptr.setBounds(x, y + 30, width, height);
@@ -161,7 +249,6 @@ public class ContenedorLogin extends JPanel {
         panel.add(componente);
 
     }
-
 
 
 

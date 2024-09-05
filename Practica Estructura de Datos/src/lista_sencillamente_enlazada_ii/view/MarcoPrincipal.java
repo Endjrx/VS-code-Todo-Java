@@ -19,8 +19,7 @@ public class MarcoPrincipal extends JFrame {
         this.setUndecorated(true);
 
         lista = new ListaPacientes(); //Creamos nuestra lista.
-        lista.agregarInicio(new Paciente("Endjrx", "1124009262", "3007821853", "Maicao", "No sé", "Masculino", 18));
-
+       
         configurarMovimientoFrame();
         add (new Contenedor(lista), BorderLayout.CENTER);
         this.setVisible(true);

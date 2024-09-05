@@ -1,14 +1,11 @@
 package lista_sencillamente_enlazada_ii.view;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
+import javax.swing.text.*;
+import javax.swing.event.*;
 import lista_sencillamente_enlazada_ii.modelo.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import javax.swing.table.*;
 
 
@@ -95,21 +92,43 @@ class TablaDatos extends JPanel {
         /*------------------------------------------------------------- */
 
 
-        txtBusqueda = new JTextField("");
+        txtBusqueda = new JTextField("Ingrese la cedula del paciente");
         txtBusqueda.setBounds(90, 110, 250, 25);
         txtBusqueda.setBorder (null);
+        txtBusqueda.setForeground(Color.GRAY);
+        txtBusqueda.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txtBusqueda.getText().equals("Ingrese la cedula del paciente")) {
+
+                    txtBusqueda.setText("");
+                    txtBusqueda.setForeground(Color.BLACK);
+
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtBusqueda.getText().isBlank()) {
+
+                    txtBusqueda.setText("Ingrese la cedula del paciente");
+                    txtBusqueda.setForeground(Color.GRAY);
+                    
+                }
+            }
+            
+        });
         txtBusqueda.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                
-                System.out.println("ingresando texto");
-
+            public void insertUpdate(DocumentEvent e) {                
+                configurarBusqueda(e);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                System.out.println("removiendo texto");
+                configurarBusqueda(e);
             }
 
             @Override
@@ -120,7 +139,6 @@ class TablaDatos extends JPanel {
         });
         panel.add(txtBusqueda);
 
-
         JSeparator sptr = new JSeparator();
         sptr.setBounds(90, 135, 250, 5);
         panel.add(sptr);
@@ -128,12 +146,14 @@ class TablaDatos extends JPanel {
 
 
         /*BOTONES DE NAVEGACION. */
-        btnAgregar = new JButton("Agregar");
+        btnAgregarInicio = new JButton("Agregar al Inicio");
+        btnAgregar = new JButton("Agregar al Final");
         btnEliminar = new JButton("Eliminar");
         btnRegresar = new JButton(new ImageIcon("src//lista_sencillamente_enlazada_ii//resources//Flecha.png"));
 
-        crearBotones(panel, btnAgregar, "Agregar P", 400, 110, 70, 20);
-        crearBotones(panel, btnEliminar, "Eliminar P", 500, 110, 70, 20);
+        crearBotones(panel, btnAgregar, "Agregar PF", 400, 110, 120, 20);
+        crearBotones(panel, btnAgregarInicio, "Agregar I", 520, 110, 120, 20);
+        crearBotones(panel, btnEliminar, "Eliminar P", 640, 110, 70, 20);
         crearBotones(panel, btnRegresar, "Regresar", -20, 10, 70, 20);
 
         add (panel, BorderLayout.NORTH);
@@ -150,7 +170,6 @@ class TablaDatos extends JPanel {
         boton.setBorder(null);
 
         if (boton.getActionCommand().equals("Eliminar P")) {
-
             boton.addActionListener(new ActionListener() {
 
                 @Override
@@ -174,32 +193,17 @@ class TablaDatos extends JPanel {
                 
             });
 
-        } else if (boton.getActionCommand().equals("Agregar P")) {
-
+        } else if (boton.getActionCommand().equals("Agregar PF")) {
             boton.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    String nombre = JOptionPane.showInputDialog("Ingrese el nombre del paciente: ");
-                    String cedula = JOptionPane.showInputDialog("Ingrese la cedula: ");
-                    String telefono = JOptionPane.showInputDialog("Ingrese el numero de telefono: ");
-                    String ciudad = JOptionPane.showInputDialog("Ingrese la ciudad: ");
-                    String descripcion = JOptionPane.showInputDialog("Ingrese la descripcion de la cita: ");
-                    String sexo = JOptionPane.showInputDialog("Ingrese el sexo: ");
-                    int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad: "));
-
-                    lista.agregarPacienteFinal(new Paciente(nombre, cedula, telefono, ciudad, descripcion, sexo, edad));
-
-                    setModeloTabla();
-                    setDatosTabla();
-
+                    configurarBotonesAgregar(boton.getActionCommand());
                 }
                 
             });
 
         } else if (boton.getActionCommand().equals("Regresar")) {
-
             boton.addActionListener(new ActionListener() {
 
                 @Override
@@ -214,12 +218,83 @@ class TablaDatos extends JPanel {
                 
             });
 
-        }
+        } else if (boton.getActionCommand().equals("Agregar I")) {
+            boton.addActionListener(new ActionListener() {
 
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    configurarBotonesAgregar(boton.getActionCommand());
+                }
+                
+            });
+
+        }
         panel.add(boton);
 
     }
+    
 
+    private void configurarBotonesAgregar (String commands) {
+
+        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del paciente: ");
+        String cedula = JOptionPane.showInputDialog("Ingrese la cedula: ");
+        String telefono = JOptionPane.showInputDialog("Ingrese el numero de telefono: ");
+        String ciudad = JOptionPane.showInputDialog("Ingrese la ciudad: ");
+        String sexo = JOptionPane.showInputDialog("Ingrese el sexo: ");
+        int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad: "));
+        String descripcion = JOptionPane.showInputDialog("Ingrese la descripcion de la cita: ");
+
+        if (commands.equals("Agregar PF")) {
+            lista.agregarPacienteFinal(new Paciente(nombre, cedula, telefono, ciudad, descripcion, sexo, edad));
+        } else {
+            lista.agregarInicio(new Paciente(nombre, cedula, telefono, ciudad, descripcion, sexo, edad));
+        }
+
+        /*Despues de agregar el paciente, actualizamos la tabla. */
+        setModeloTabla();
+        setDatosTabla();
+
+    }
+
+
+    private void configurarBusqueda (DocumentEvent e) {
+
+        try {
+
+            /*Obtenemos el documento del JTextField. (Documento almacena todo lo ingresado en el textfield)*/
+            Document documento = e.getDocument();
+            String texto = documento.getText(0, documento.getLength()); //Obtenemos todo el texto del documento. 
+
+            /*Buscamo el texto en la tabla */
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+
+                if (tabla.getValueAt(i, 1) instanceof String) {
+                    
+                    /*Obtenemos el String de la columna de las cedulas y  de cada fila. Para poder comparar. */
+                    String tabla_string = (String) tabla.getValueAt(i, 1);
+                    if (tabla_string.equals(texto)) {
+                        
+                        tabla.setRowSelectionInterval(i, i);
+                        tabla.setSelectionBackground(Color.gray); 
+                        return;
+
+                    } else {
+                        
+                        /*En caso despues de encontrar un paciente y al buscar otro, desmarque el primero seleccionado. */
+                        tabla.removeRowSelectionInterval(0, tabla.getRowCount() - 1);
+
+                    }
+
+                }
+
+            }
+
+
+        } catch (BadLocationException ex) {
+            System.out.println("Error debido a: " + ex.getMessage() + "\n" + ex.getCause());
+        }
+
+    }
 
 
     /*Set Modelo para la tabla */
@@ -239,6 +314,7 @@ class TablaDatos extends JPanel {
         };
         modelo_tabla.setColumnIdentifiers(header);
         tabla.setModel(modelo_tabla);
+        tabla.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
     }
 
@@ -276,5 +352,5 @@ class TablaDatos extends JPanel {
     private JTextField txtBusqueda;
     private ListaPacientes lista;
     private JPanel panel_principal;
-    private JButton btnAgregar, btnEliminar, btnRegresar;
+    private JButton btnAgregar, btnEliminar, btnRegresar, btnAgregarInicio;
 }
